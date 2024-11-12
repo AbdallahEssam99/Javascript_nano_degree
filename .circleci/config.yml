@@ -29,10 +29,9 @@ jobs:
 
 # Building the frontend
       - run:
-        name: Front-End Build
-        command: |
-          NODE_OPTIONS=--openssl-legacy-provider npm run frontend:build
-
+          name: Front-End Build
+          command: |
+            NODE_OPTIONS=--openssl-legacy-provider npm run frontend:build
 # Deploying the frontend to AWS S3
       - run:
           name: Front-End Deploy
