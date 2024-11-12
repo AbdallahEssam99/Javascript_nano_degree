@@ -14,7 +14,7 @@
     "prod": "npx tsc && node ./www/server.js",
     "clean": "rm -rf www/ || true",
     "deploy": "set NODE_OPTIONS=--openssl-legacy-provider && npm run build && eb list && eb use udagram-api-dev && eb deploy",
-    "build": "npm install . && npm run clean && tsc && cp -rf src/config www/config && cp package.json www/package.json && cd www && 7z a -r Archive.zip . && cd ..",
+    "build": "npm install . && npm run clean && tsc && cp -rf src/config www/config && cp package.json www/package.json && cd www && zip -r Archive.zip . && cd ..",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
