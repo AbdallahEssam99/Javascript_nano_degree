@@ -62,7 +62,7 @@ jobs:
       - run:
           name: Setting Environment Variables in Elastic Beanstalk using eb setenv command
           command: |
-            EB_ENV_VARS=$(env | grep CIRCLE | awk -F "=" '{if ($2 != "" && $1 ~ /^[A-Za-z_][A-Za-z0-9_]*$/) print $1"="$2}' | tr '\n' ' ')
+            EB_ENV_VARS=$(env | grep CIRCLE | awk -F "=" '{if ($2 != "") print $1"="$2}' | tr '\n' ' ')
             eb setenv $EB_ENV_VARS
       
       # Deploying the backend to AWS Elastic Beanstalk
