@@ -60,8 +60,8 @@ jobs:
       - run:
           name: Setting Environment Variables in Elastic Beanstalk
           command: |
-            # Filter and collect only valid environment variables
-            EB_ENV_VARS=$(env | grep -E '^[A-Za-z][A-Za-z0-9_]*=' | tr '\n' ' ')
+            # Filter and collect only valid environment variables (starting with a letter and non-empty values)
+            EB_ENV_VARS=$(env | grep -E '^[A-Za-z][A-Za-z0-9_]*=' | grep -vE '^[[:space:]]*$' | tr '\n' ' ')
 
             # Log the valid environment variables being set
             echo "Setting the following environment variables: $EB_ENV_VARS"
