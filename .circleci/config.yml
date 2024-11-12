@@ -60,7 +60,7 @@ jobs:
           command: |
             #!/bin/bash -eo pipefail
             # Extract environment variables that start with CIRCLE and are valid
-            EB_ENV_VARS=$(env | grep CIRCLE | awk -F "=" '{print $1"="$2}' | tr '\n' ' ')
+            EB_ENV_VARS=$(env | grep CIRCLE | awk -F "=" '{if ($2 != "" && $1 ~ /^[A-Za-z_][A-Za-z0-9_]*$/) print $1"="$2}' | tr '\n' ' ')
             
             # Debugging: Print the environment variables to check if they're formatted correctly
             echo "Setting the following environment variables: $EB_ENV_VARS"
