@@ -67,6 +67,33 @@ jobs:
           command: |
             printenv
       - run:
+          name: Set environment variables in Elastic Beanstalk
+          command: |
+            # List of required variables for deployment
+            REQUIRED_VARS=("POSTGRES_HOST" "POSTGRES_PORT" "POSTGRES_USERNAME" "POSTGRES_PASSWORD" "AWS_ACCESS_KEY_ID" "AWS_SECRET_ACCESS_KEY" "AWS_REGION" "JWT_SECRET")
+            
+            # Collect only non-empty, non-masked, and valid environment variables
+            VALID_VARS=""
+            for VAR in "${REQUIRED_VARS[@]}"; do
+              VALUE=$(printenv "$VAR")
+              
+              # Check if the variable has a non-empty, non-masked value
+              if [[ -n "$VALUE" && "$VALUE" != "********" ]]; then
+                VALID_VARS+="$VAR=$VALUE "
+              else
+                echo "Skipping invalid or empty variable: $VAR"
+              fi
+            done
+            
+            # Ensure we have valid variables to set
+            if [[ -z "$VALID_VARS" ]]; then
+              echo "No valid environment variables to set. Exiting."
+              exit 1
+            else
+              echo "Setting valid environment variables in Elastic Beanstalk: $VALID_VARS"
+              eb setenv $VALID_VARS
+            fi
+      - run:
           name: Seting Environment Variables in Elastic BeanstalkUsing eb setenv commaned
           command: |
             EB_ENV_VARS=$(env | grep CIRCLE | awk -F "=" '{print $1"="$2}' | tr '\n' ' ')
