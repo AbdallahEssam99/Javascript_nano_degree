@@ -53,10 +53,10 @@ jobs:
       - run:
           name: Initialize Elastic Beanstalk
           command: |
-            eb init -p node.js udagram-api --region us-east-1 --platform node.js
+            eb init -p node.js udagram_api --region us-east-1 --platform node.js
             
             # Set the default environment
-            eb use Udagram-api-env
+            eb use Udagramapi-env-1
       
       # Setting environment variables in Elastic Beanstalk
       - run:
