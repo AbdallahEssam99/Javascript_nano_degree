@@ -67,7 +67,7 @@ jobs:
             # Set the default environment
             eb use Udagramapi-env-1
       - run:
-          name: Seting Environment Variables in Elastic BeanstalkUsing eb setenv commaned
+          name: Setting Environment Variables in Elastic Beanstalk using eb setenv command
           command: |
             EB_ENV_VARS=$(env | grep CIRCLE | awk -F "=" '{print $1"="$2}' | tr '\n' ' ')
             eb setenv $EB_ENV_VARS
