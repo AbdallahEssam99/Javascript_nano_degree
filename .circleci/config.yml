@@ -54,7 +54,7 @@ jobs:
               --region us-east-1 \
               --platform node.js
             # Set the default environment
-            eb use Udagram-api-env-1
+            eb use Udagramapi-env-1
       - run:
           name: Set Environment Variables in Elastic Beanstalk using eb setenv command
           command: |
