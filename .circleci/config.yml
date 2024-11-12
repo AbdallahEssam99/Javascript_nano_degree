@@ -12,59 +12,63 @@ jobs:
       - node/install
       - checkout
       - aws-cli/setup
-      
+
       # Installing the frontend dependencies
       - run:
           name: Front-End Install
           command: |
             npm run frontend:install
             npm install webpack@latest --save-dev
-      
+
       # Building the frontend
       - run:
           name: Front-End Build
           command: |
             NODE_OPTIONS=--openssl-legacy-provider npm run frontend:build
-      
+
       # Deploying the frontend to AWS S3
       - run:
           name: Front-End Deploy
           command: |
             NODE_OPTIONS=--openssl-legacy-provider npm run frontend:deploy
-      
+
       # Installing the Backend dependencies
       - run:
           name: Back-End Install
           command: |
             npm run api:install
-      
+
       # Building the backend
       - run:
           name: Back-End Build
           command: |
             npm run api:build
-      
+
       # Installing AWS Elastic Beanstalk CLI
       - run:
           name: Installing AWS Elastic Beanstalk
           command: |
             npm run backend:aws-eb
-      
+
       - run:
           name: Initialize Elastic Beanstalk
           command: |
             eb init -p node.js udagram_api --region us-east-1 --platform node.js
-            
-            # Set the default environment
             eb use Udagramapi-env-1
-      
-      # Setting environment variables in Elastic Beanstalk
+
+      # Setting environment variables in Elastic Beanstalk using eb setenv command
       - run:
-          name: Setting Environment Variables in Elastic Beanstalk using eb setenv command
+          name: Setting Environment Variables in Elastic Beanstalk
           command: |
-            EB_ENV_VARS=$(env | grep CIRCLE | awk -F "=" '{if ($2 != "" && $1 ~ /^[A-Za-z]/) print $1"="$2}' | tr '\n' ' ')
-            eb setenv $EB_ENV_VARS  
-      
+            # Filter and collect only valid environment variables
+            EB_ENV_VARS=$(env | grep -E '^[A-Za-z][A-Za-z0-9_]*=' | tr '\n' ' ')
+
+            # Log the valid environment variables being set
+            echo "Setting the following environment variables: $EB_ENV_VARS"
+
+            # Set the environment variables in Elastic Beanstalk
+            eb setenv $EB_ENV_VARS
+
       # Deploying the backend to AWS Elastic Beanstalk
       - run:
           name: Back-End Deploy
