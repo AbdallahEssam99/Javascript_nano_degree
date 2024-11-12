@@ -100,11 +100,6 @@ jobs:
                 eb setenv "$ENV_VAR" || { echo "Error setting $ENV_VAR"; exit 1; }
               done
             fi
-      - run:
-          name: Seting Environment Variables in Elastic BeanstalkUsing eb setenv commaned
-          command: |
-            EB_ENV_VARS=$(env | grep CIRCLE | awk -F "=" '{print $1"="$2}' | tr '\n' ' ')
-            eb setenv $EB_ENV_VARS
 
 # Deploying the backend to AWS Elastic Beanstalk
       - run:
