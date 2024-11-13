@@ -105,7 +105,7 @@ jobs:
       - run:
           name: Back-End Deploy
           command: |
-            NODE_OPTIONS=--openssl-legacy-provider npm run api:deploy
+            npm run api:deploy
 workflows:
   build-and-deploy:
     jobs:
