@@ -61,10 +61,39 @@ jobs:
             eb use Udagramapi-env-1
 
       - run:
-          name: Seting Environment Variables in Elastic BeanstalkUsing eb setenv commaned
+          name: Set application-specific environment variables in Elastic Beanstalk
           command: |
-            EB_ENV_VARS=$(env | grep CIRCLE | awk -F "=" '{print $1"="$2}' | tr '\n' ' ')
-            eb setenv $EB_ENV_VARS
+            # Define a pattern for allowed variables, adjusting as needed for your app's variables
+            ALLOWED_VARS=("POSTGRES_HOST" "POSTGRES_PORT" "POSTGRES_USERNAME" "POSTGRES_PASSWORD" "AWS_ACCESS_KEY_ID" "AWS_SECRET_ACCESS_KEY" "AWS_REGION" "JWT_SECRET")
+
+            # Initialize valid variables string
+            VALID_VARS=""
+
+            # Loop through allowed environment variables
+            for VAR in "${ALLOWED_VARS[@]}"; do
+              VALUE=$(printenv "$VAR")
+
+              # Validate that each variable is not empty or masked
+              if [[ -n "$VALUE" && "$VALUE" != "********" ]]; then
+                VALID_VARS+="$VAR=$VALUE "
+              else
+                echo "Skipping invalid or empty variable: $VAR"
+              fi
+            done
+
+            # Ensure we have valid variables to set
+            if [[ -z "$VALID_VARS" ]]; then
+              echo "No valid environment variables to set. Exiting."
+              exit 1
+            else
+              echo "Setting valid environment variables in Elastic Beanstalk: $VALID_VARS"
+              
+              # Set each environment variable individually to catch syntax issues
+              for ENV_VAR in $VALID_VARS; do
+                echo "Setting: $ENV_VAR"
+                eb setenv "$ENV_VAR" || { echo "Error setting $ENV_VAR"; exit 1; }
+              done
+            fi
 # Deploying the backend to AWS Elastic Beanstalk
       - run:
           name: Back-End Deploy
