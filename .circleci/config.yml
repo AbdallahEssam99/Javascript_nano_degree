@@ -69,18 +69,15 @@ jobs:
       - run:
           name: Set environment variables in Elastic Beanstalk
           command: |
-            # List of required variables for deployment
-            REQUIRED_VARS=("POSTGRES_HOST" "POSTGRES_PORT" "POSTGRES_USERNAME" "POSTGRES_PASSWORD" "AWS_ACCESS_KEY_ID" "AWS_SECRET_ACCESS_KEY" "AWS_REGION" "JWT_SECRET")
-            
             # Initialize valid variables string
             VALID_VARS=""
       
-            # Collect valid environment variables, ensuring format is correct
-            for VAR in "${REQUIRED_VARS[@]}"; do
+            # Loop through all environment variables and collect those that are valid
+            for VAR in $(printenv | awk -F= '{print $1}'); do
               VALUE=$(printenv "$VAR")
               
               # Validate variable name and check that it's not empty or masked
-              if [[ -n "$VALUE" && "$VALUE" != "********" && "$VALUE" =~ ^[a-zA-Z_][a-zA-Z0-9_]*$ ]]; then
+              if [[ -n "$VALUE" && "$VALUE" != "********" && "$VAR" =~ ^[a-zA-Z_][a-zA-Z0-9_]*$ ]]; then
                 VALID_VARS+="$VAR=$VALUE "
               else
                 echo "Skipping invalid or empty variable: $VAR"
