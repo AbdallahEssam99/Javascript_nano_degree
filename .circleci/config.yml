@@ -63,7 +63,17 @@ jobs:
       - run:
           name: Seting Environment Variables in Elastic BeanstalkUsing eb setenv commaned
           command: |
-            eb setenv `cat .env | sed '/^#/ d' | sed '/^$/ d'`
+            for VAR in $(env | grep CIRCLE | awk -F "=" '{print $1}'); do
+            VALUE=$(printenv "$VAR")
+            
+            # Check if the value is not empty or masked (********)
+            if [[ -n "$VALUE" && "$VALUE" != "********" ]]; then
+                echo "Setting: $VAR=$VALUE"
+                eb setenv "$VAR=$VALUE" || { echo "Error setting $VAR"; exit 1; }
+            else
+                echo "Skipping invalid or empty variable: $VAR"
+            fi
+            done
 
 # Deploying the backend to AWS Elastic Beanstalk
       - run:
