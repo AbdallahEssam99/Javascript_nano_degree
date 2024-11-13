@@ -6,8 +6,8 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
-    "deploy": "set NODE_OPTIONS=--openssl-legacy-provider && npm install -f && npm run build && chmod +x bin/deploy.sh && bin/deploy.sh",
+    "build": "node --openssl-legacy-provider ./node_modules/.bin/ng build",
+    "deploy": "npm install -f && npm run build && chmod +x bin/deploy.sh && bin/deploy.sh",
     "test": "ng test --watch=false",
     "lint": "ng lint",
     "e2e": "ng e2e"
@@ -26,14 +26,15 @@
     "@ionic/angular": "^4.1.0",
     "core-js": "^2.5.4",
     "rxjs": "~6.5.4",
+    "udagram-frontend": "file:",
     "zone.js": "~0.9.1"
   },
   "devDependencies": {
     "@angular-devkit/architect": "~0.12.3",
-    "@angular-devkit/build-angular": "0.803.29",
+    "@angular-devkit/build-angular": "^0.803.24",
     "@angular-devkit/core": "~7.2.3",
     "@angular-devkit/schematics": "~7.2.3",
-    "@angular/cli": "^8.3.29",
+    "@angular/cli": "~8.3.25",
     "@angular/compiler": "~8.2.14",
     "@angular/compiler-cli": "~8.2.14",
     "@angular/language-service": "~8.2.14",

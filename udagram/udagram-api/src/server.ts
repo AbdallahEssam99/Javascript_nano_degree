@@ -8,8 +8,6 @@ import { IndexRouter } from "./controllers/v0/index.router";
 import bodyParser from "body-parser";
 import { V0_FEED_MODELS, V0_USER_MODELS } from "./controllers/v0/model.index";
 
-const AWS = require("aws-sdk");
-require("aws-sdk/lib/maintenance_mode_message").suppress = true;
 (async () => {
   dotenv.config();
   
@@ -51,13 +49,13 @@ require("aws-sdk/lib/maintenance_mode_message").suppress = true;
 
   // Root URI call
   app.get("/", async (req, res) => {
-    res.send("Hello World");
+    res.send("/api/v0/");
   });
 
   // Start the Server
   app.listen(port, () => {
     console.log(`Backend server is listening on port ${port}....`);
-    console.log(`Frontent server running`);
+    console.log(`Frontent server running ${process.env.URL}`);
     console.log(`press CTRL+C to stop server`);
   });
 })();
