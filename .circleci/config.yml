@@ -95,8 +95,11 @@ jobs:
               echo "Setting valid environment variables in Elastic Beanstalk: $VALID_VARS"
               
               # Set each environment variable individually to catch syntax issues
-              for ENV_VAR in
-
+              for ENV_VAR in $VALID_VARS; do
+                echo "Setting: $ENV_VAR"
+                eb setenv "$ENV_VAR" || { echo "Error setting $ENV_VAR"; exit 1; }
+              done
+            fi
 
 # Deploying the backend to AWS Elastic Beanstalk
       - run:
