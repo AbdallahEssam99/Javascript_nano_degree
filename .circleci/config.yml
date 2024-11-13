@@ -63,9 +63,8 @@ jobs:
       - run:
           name: Seting Environment Variables in Elastic BeanstalkUsing eb setenv commaned
           command: |
-            EB_ENV_VARS=$(env | grep CIRCLE | awk -F "=" '{print $1"="$2}' | tr '\n' ' ')
-            eb setenv $EB_ENV_VARS
-            
+            eb setenv `cat .env | sed '/^#/ d' | sed '/^$/ d'`
+
 # Deploying the backend to AWS Elastic Beanstalk
       - run:
           name: Back-End Deploy
